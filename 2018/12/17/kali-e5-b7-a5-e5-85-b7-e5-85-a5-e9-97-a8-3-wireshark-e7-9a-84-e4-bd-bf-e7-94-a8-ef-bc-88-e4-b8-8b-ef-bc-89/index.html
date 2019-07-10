@@ -1,0 +1,87 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="keywords" content="青花@Blue_And_White, 青花@Blue_And_White"><meta name="author" content="青花@Blue_And_White"><meta name="description" content="kali工具入门-3 wireshark的使用（下）"><meta name="copyright" content="青花@Blue_And_White"><title>kali工具入门-3 wireshark的使用（下） | 青花@Blue_And_White</title><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><link rel="stylesheet" href="/css/index.css?v=1.0.2"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=1.0.2"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png?v=1.0.2"><script>let CONFIG = {
+  back2top_animation: true,
+  sidebar_offsetTop: '20px'
+};
+window.CONFIG = CONFIG;</script></head><body><div id="container"><header id="header" style="background-image: url(https://www.evil-qinghua.top/wp-content/xingkong1-1-1024x357.png)"><nav class="header-nav"><div class="header-nav-inner"><div class="header-nav-menu-icon fa fa-bars"></div><div class="header-nav-search"><i class="fa fa-search"></i><span>搜索</span></div><div class="header-nav-menu"><span><a href="/"><i class="fa fa-home"></i>首页</a></span><span><a href="/archives/"><i class="fa fa-folder-open"></i>归档</a></span><span><a href="/categories/"><i class="fa fa-th"></i>分类</a></span><span><a href="/tags/"><i class="fa fa-tags"></i>标签</a></span><span><a href="/friend/"><i class="fa fa-handshake-o"></i>nav.友情链接</a></span></div></div></nav><div class="header-info"><div class="header-info-inner"><div class="site-info-title">青花@Blue_And_White</div><div class="site-info-subtitle">一个网络安全实践者</div></div></div></header><main id="main"><div class="main-inner"><aside id="sidebar"><div class="sidebar-inner"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-overview">站点概览</span></div><section class="sidebar-toc"><div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#kali工具入门-3-wireshark的使用（下）"><span class="toc-number">1.</span> <span class="toc-text">kali工具入门-3 wireshark的使用（下）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前情提要"><span class="toc-number">1.1.</span> <span class="toc-text">前情提要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#wireshark简单的分析http协议"><span class="toc-number">1.2.</span> <span class="toc-text">wireshark简单的分析http协议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#墨者学院一个靶场的简单分析"><span class="toc-number">1.3.</span> <span class="toc-text">墨者学院一个靶场的简单分析</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#TCPDUMP的使用"><span class="toc-number">1.4.</span> <span class="toc-text">TCPDUMP的使用</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小节"><span class="toc-number">1.5.</span> <span class="toc-text">小节</span></a></li></ol></li></ol></div></section><section class="hide sidebar-overview"><div class="sidebar-author"><img class="sidebar-author-avatar" src="/images/avatar.png" alt="avatar"><p class="sidebar-author-motto">士不可以不弘毅，任重而道远</p></div><div class="sidebar-social"><span class="sidebar-social-item"><a href="https://github.com/Blue-And-White" target="_blank" title="github → https://github.com/Blue-And-White"><i class="fa fa-github"></i></a></span><span class="sidebar-social-item"><a href="tencent://QQInterLive/?Cmd=2&amp;Uin=597151269" target="_blank" title="qq → tencent://QQInterLive/?Cmd=2&amp;Uin=597151269"><i class="fa fa-qq"></i></a></span><span class="sidebar-social-item"><a href="mailto:blueandwhite@yeah.net" target="_blank" title="mail → mailto:blueandwhite@yeah.net"><i class="fa fa-envelope-o"></i></a></span></div><div class="sidebar-state"><div class="sidebar-state-item sidebar-state-posts"><a href="/archives/"><div class="sidebar-state-item-count">16</div><div class="sidebar-state-item-name">文章</div></a></div><div class="sidebar-state-item sidebar-state-categories"><a href="/categories/"><div class="sidebar-state-item-count">10</div><div class="sidebar-state-item-name">分类</div></a></div><div class="sidebar-state-item sidebar-state-tags"><a href="/tags/"><div class="sidebar-state-item-count">20</div><div class="sidebar-state-item-name">标签</div></a></div></div><div class="sidebar-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="creative commons"></a></div></section><div class="sidebar-progress"><div class="sidebar-progress-read"><span>你已阅读了</span><span class="sidebar-progress-number"></span></div><div class="sidebar-progress-line"></div></div></div></aside><div class="main-content code-highlight"><div class="post-header"><h1 class="post-title">kali工具入门-3 wireshark的使用（下）</h1><div class="post-meta"><span class="post-meta-create"><i class="fa fa-calendar-o"></i><span>发表于 </span><span>2018-12-17</span></span><span class="post-meta-update"><i class="fa fa-calendar-check-o"></i><span>更新于 </span><span>2019-07-10</span></span><span class="post-meta-reading-count"><i class="fa fa-eye"></i><span>阅读次数 </span><span id="busuanzi_value_page_pv"></span></span></div></div><div class="post-body"><p>kali工具入门-3 wireshark的使用（下）</p>
+<h1 id="kali工具入门-3-wireshark的使用（下）"><a href="#kali工具入门-3-wireshark的使用（下）" class="headerlink" title="kali工具入门-3 wireshark的使用（下）"></a>kali工具入门-3 wireshark的使用（下）</h1><h2 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h2><p> 前面我们介绍了wireshark一些菜单的简单介绍，以及简单使用，在后面我们还简单的分析了一下三次握手。在本节我们会简单的分析一些http协议，还有前几天作者去玩靶场遇到的一个案例，最后我们会说一下tcpdump的简单使用。</p>
+<p> –青花</p>
+<h2 id="wireshark简单的分析http协议"><a href="#wireshark简单的分析http协议" class="headerlink" title="wireshark简单的分析http协议"></a>wireshark简单的分析http协议</h2><p><img src="http://139.224.115.186/images/1540014177563.png" alt="1540014177563"></p>
+<p>我们首先开启监听访问网络，筛选http协议。</p>
+<p><img src="http://139.224.115.186/images/1540014223455.png" alt="1540014223455"></p>
+<p>找到一个数据包右键追踪数据流，追踪TCP流。</p>
+<p><img src="http://139.224.115.186/images/1540014134870.png" alt="1540014134870"></p>
+<p>之后这里就是我们追踪到的一个HTTP了。</p>
+<p>我们看上面是一个GET请求</p>
+<p>我们分析一些这个GET请求</p>
+<p>在HTTP中</p>
+<p><img src="http://139.224.115.186/images/1540014784546.png" alt="1540014784546"></p>
+<p>然后我们再来看一下http的响应头。</p>
+<p><img src="http://139.224.115.186/images/1540024717138.png" alt="1540024717138"></p>
+<p>响应头这里，状态码。大小长度，项目类型这些信息也都给我们显示出来了。</p>
+<p><img src="http://139.224.115.186/images/1540024759938.png" alt="1540024759938"></p>
+<p>再往下面看就是一些内容了。</p>
+<h2 id="墨者学院一个靶场的简单分析"><a href="#墨者学院一个靶场的简单分析" class="headerlink" title="墨者学院一个靶场的简单分析"></a>墨者学院一个靶场的简单分析</h2><p><img src="http://139.224.115.186/images/1540025410321.png" alt="1540025410321"></p>
+<p>首先我们来看一下题目。</p>
+<p>这个来说就是叫我们分析一下流量查看其中是不是有可以数据。</p>
+<p>我们下载下来文件是一个pacp的文件，这个是wireshark包的格式。</p>
+<p><img src="http://139.224.115.186/images/1540025682459.png" alt="1540025682459"></p>
+<p>我们现在开始分析流量。</p>
+<p><img src="http://139.224.115.186/images/1540025713986.png" alt="1540025713986"></p>
+<p>首先来说我们应该清楚一下，DNS（地址解析协议）还有SSDP（简单服务发现协议）这个传输数据可能性很低，所以我们先不必深究先看看其他的。</p>
+<p>我们发现在上图中有TCP还有HTTP协议。</p>
+<p>我们思考HTTP在进行运行的时候，下层要用TCP建立连接，这里是这么做得，我们跟进TCP流。</p>
+<p><img src="http://139.224.115.186/images/1540025962249.png" alt="1540025962249"></p>
+<p>发现没有什么价值，这里只是一个请求还有返回一个页面。不过其中出现了upload这个是上传啊，但是在返回页面我们没有发现有价值的东西。不必灰心，继续向下面推进。</p>
+<p><img src="http://139.224.115.186/images/1540026044174.png" alt="1540026044174"></p>
+<p>我们发现下面这里出现了post请求，我们跟进一下看看。</p>
+<p><img src="http://139.224.115.186/images/1540026096033.png" alt="1540026096033"></p>
+<p>发现请求头响应内容并没有什么价值。继续跟进。</p>
+<p><img src="http://139.224.115.186/images/1540026163009.png" alt="1540026163009"></p>
+<p>下面又一串TCP的包。</p>
+<p>我们跟进</p>
+<p><img src="http://139.224.115.186/images/1540026206635.png" alt="1540026206635"></p>
+<p>发现这里面有FLAG哎。</p>
+<p>下面的内容乱七八糟应该是图片内容，我们搜索一下flag看看是不是被隐写了。</p>
+<p><img src="http://139.224.115.186/images/1540026249892.png" alt="1540026249892"></p>
+<p>结果正中！</p>
+<p>所以说这就是我们进行简单的流量分析的一个过程。</p>
+<h2 id="TCPDUMP的使用"><a href="#TCPDUMP的使用" class="headerlink" title="TCPDUMP的使用"></a>TCPDUMP的使用</h2><p>TcpDump可以将网络中传送的<a href="https://baike.baidu.com/item/%E6%95%B0%E6%8D%AE%E5%8C%85/489739" target="_blank" rel="noopener">数据包</a>完全截获下来提供分析。它支持针对网络层、协议、<a href="https://baike.baidu.com/item/%E4%B8%BB%E6%9C%BA/455151" target="_blank" rel="noopener">主机</a>、网络或端口的过滤，并提供and、or、not等逻辑语句来帮助你去掉无用的信息。</p>
+<p>我们可以在Linux终端中输入tcpdump是否已经安装。</p>
+<p><img src="http://139.224.115.186/images/1540027565921.png" alt="1540027565921"></p>
+<p>这个就在抓取一些数据包。</p>
+<p>如果没有的话在centos系列系统中，我们可以输入yum install -y tcpdump</p>
+<p>这个也比较简单。</p>
+<p>我们这里再来介绍一下它的参数。</p>
+<pre><code>tcpdump [ -adeflnNOpqStvx ] [ -c 数量 ] [ -F 文件名 ]
+[ -i 网络接口 ] [ -r 文件名] [ -s snaplen ]
+[ -T 类型 ] [ -w 文件名 ] [表达式 ]
+1. tcpdump的选项介绍
+-a 　将网络地址和广播地址转变成名字；
+-d 　将匹配信息包的代码以人们能够理解的汇编格式给出；
+-dd 　将匹配信息包的代码以c语言程序段的格式给出；
+-ddd 　将匹配信息包的代码以十进制的形式给出；
+-e 　在输出行打印出数据链路层的头部信息；
+-f 　将外部的Internet地址以数字的形式打印出来；
+-l 　使标准输出变为缓冲行形式；
+-n 　不把网络地址转换成名字；
+-t 　在输出的每一行不打印时间戳；
+-v 　输出一个稍微详细的信息，例如在ip包中可以包括ttl和服务类型的信息；
+-vv 　输出详细的报文信息；
+-c 　在收到指定的包的数目后，tcpdump就会停止；
+-F 　从指定的文件中读取表达式,忽略其它的表达式；
+-i 　指定监听的网络接口；
+-r 　从指定的文件中读取包(这些包一般通过-w选项产生)；
+-w 　直接将包写入文件中，并不分析和打印出来；
+-T 　将监听到的包直接解释为指定的类型的报文，常见的类型有rpc （远程过程
+调用）和snmp（简单　网络管理协议；）</code></pre><p>这里面我们还有能够利用一些正规来表示。这个类似于wireshark的过滤规则，这里面我们就不详细说了。</p>
+<p>这里面我们比如说，我们要抓icmp的包，然后给他写入一个文件。</p>
+<p><img src="http://139.224.115.186/images/1540028400696.png" alt="1540028400696"></p>
+<p>我们在终端输入命令开启监听。</p>
+<p>另外在其他地方Ping</p>
+<p><img src="http://139.224.115.186/images/1540028430242.png" alt="1540028430242"></p>
+<p>最后结束发现有包了，抓到了8个icmp的包。</p>
+<p><img src="http://139.224.115.186/images/1540028478432.png" alt="1540028478432"></p>
+<p>我们发现这个文件被存储了，我们可以把它弄到wireshark等工具分析啦！</p>
+<p>这里只是作一个基本的介绍，如果想要深入的了解一下，还是要自己深入的进行研究啦。</p>
+<h2 id="小节"><a href="#小节" class="headerlink" title="小节"></a>小节</h2><p> 最近说了一下网络协议的基本分析工具，这个也能够帮助我们更好地理解排除网络的故障，本文由于作者的个人能力原因，所以呢也不是很深入，不足之处还望请大家多多指教。能够跟大家一起多多学习进步。</p>
+</div><footer class="post-footer"><div class="post-footer-end"><span>------</span><span>本文结束，感谢您的阅读</span><span>------</span></div><div class="post-footer-copyright"><div class="copyright-author"><span class="copyright-name">本文作者:</span><span class="copyright-value"><a href="http://yoursite.com">青花@Blue_And_White</a></span></div><div class="copyright-link"><span class="copyright-name">本文链接:</span><span class="copyright-value"><a href="http://yoursite.com/2018/12/17/kali-e5-b7-a5-e5-85-b7-e5-85-a5-e9-97-a8-3-wireshark-e7-9a-84-e4-bd-bf-e7-94-a8-ef-bc-88-e4-b8-8b-ef-bc-89/">http://yoursite.com/2018/12/17/kali-e5-b7-a5-e5-85-b7-e5-85-a5-e9-97-a8-3-wireshark-e7-9a-84-e4-bd-bf-e7-94-a8-ef-bc-88-e4-b8-8b-ef-bc-89/</a></span></div><div class="copyright-notice"><span class="copyright-name">版权声明:</span><span class="copyright-value">本博客所有文章除特别声明外，均采用  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-footer-tags"><i class="fa fa-tags icon"></i><span><a href="http://yoursite.com/tags/网络嗅探/" title="网络嗅探">网络嗅探</a></span><span><a href="http://yoursite.com/tags/工具/" title="工具">工具</a></span><span><a href="http://yoursite.com/tags/wireshark/" title="wireshark">wireshark</a></span></div><nav id="paginator"><div class="post-paginator"><div class="article-prev pull-left"><a href="/2018/12/17/kali-e5-b7-a5-e5-85-b7-e5-85-a5-e9-97-a84-namp-e7-9a-84-e4-bd-bf-e7-94-a8-ef-bc-88-e4-b8-8a-ef-bc-89/"><i class="fa fa-chevron-left"></i><span class="title">kali工具入门4-Namp的使用（上）</span></a></div><div class="article-next pull-right"><a href="/2018/12/17/kali-e5-b7-a5-e5-85-b7-e5-85-a5-e9-97-a8-3-wireshark-e7-9a-84-e4-bd-bf-e7-94-a8-ef-bc-88-e4-b8-ad-ef-bc-89/"><span class="title">kali工具入门-3 wireshark的使用（中）</span><i class="fa fa-chevron-right"></i></a></div></div></nav></footer></div></div></main><footer id="footer"><div class="footer-inner"><div><span>&copy; 2019</span><span class="fa fa-paper-plane heart-beat footer-separator" style="color: #ff0000"></span><span>青花@Blue_And_White.</span></div><div><span class="footer-powered">由 <a href="http://hexo.io/" title="hexo" target="_blank" rel="noopener">hexo</a> 强力驱动</span><span> v3.9.0.</span></div><div class="busuanzi"><script async src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@2.3/bsz.pure.mini.js"></script><span class="busuanzi-uv"><i class="fa fa-user"></i><span>访问人数 </span><span id="busuanzi_value_site_uv"></span></span><span class="separator">|</span><span class="busuanzi-pv"><i class="fa fa-eye"></i><span>浏览总量 </span><span id="busuanzi_value_site_pv"></span></span></div></div></footer><div id="back-top"><div class="back-top-inner" title="回到顶部"><i class="fa fa-rocket"></i></div></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="/js/utils.js?v=1.0.2"></script><script src="/js/scroll.js?v=1.0.2"></script><script src="/js/header.js?v=1.0.2"></script><script src="/js/sidebar.js?v=1.0.2"></script><script src="/js/post.js?v=1.0.2"></script></body></html>

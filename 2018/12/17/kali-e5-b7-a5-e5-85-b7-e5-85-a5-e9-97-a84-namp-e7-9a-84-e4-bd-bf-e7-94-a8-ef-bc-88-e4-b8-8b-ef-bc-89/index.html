@@ -1,0 +1,85 @@
+<!DOCTYPE html><html lang="zh-CN"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="keywords" content="青花@Blue_And_White, 青花@Blue_And_White"><meta name="author" content="青花@Blue_And_White"><meta name="description" content="kali工具入门4-namp的使用（下）"><meta name="copyright" content="青花@Blue_And_White"><title>kali工具入门4-namp的使用（下） | 青花@Blue_And_White</title><meta name="format-detection" content="telephone=no"><meta http-equiv="x-dns-prefetch-control" content="on"><link rel="dns-prefetch" href="https://cdn.jsdelivr.net"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css"><link rel="stylesheet" href="/css/index.css?v=1.0.2"><link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.png?v=1.0.2"><link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.png?v=1.0.2"><script>let CONFIG = {
+  back2top_animation: true,
+  sidebar_offsetTop: '20px'
+};
+window.CONFIG = CONFIG;</script></head><body><div id="container"><header id="header" style="background-image: url(https://www.evil-qinghua.top/wp-content/xingkong1-1-1024x357.png)"><nav class="header-nav"><div class="header-nav-inner"><div class="header-nav-menu-icon fa fa-bars"></div><div class="header-nav-search"><i class="fa fa-search"></i><span>搜索</span></div><div class="header-nav-menu"><span><a href="/"><i class="fa fa-home"></i>首页</a></span><span><a href="/archives/"><i class="fa fa-folder-open"></i>归档</a></span><span><a href="/categories/"><i class="fa fa-th"></i>分类</a></span><span><a href="/tags/"><i class="fa fa-tags"></i>标签</a></span><span><a href="/friend/"><i class="fa fa-handshake-o"></i>nav.友情链接</a></span></div></div></nav><div class="header-info"><div class="header-info-inner"><div class="site-info-title">青花@Blue_And_White</div><div class="site-info-subtitle">一个网络安全实践者</div></div></div></header><main id="main"><div class="main-inner"><aside id="sidebar"><div class="sidebar-inner"><div class="sidebar-nav"><span class="sidebar-nav-toc current">文章目录</span><span class="sidebar-nav-overview">站点概览</span></div><section class="sidebar-toc"><div><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#kali工具入门4-namp的使用（下）"><span class="toc-number">1.</span> <span class="toc-text">kali工具入门4-namp的使用（下）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前情提要"><span class="toc-number">1.1.</span> <span class="toc-text">前情提要</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NMAP脚本"><span class="toc-number">1.2.</span> <span class="toc-text">NMAP脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NMAP常用脚本"><span class="toc-number">1.3.</span> <span class="toc-text">NMAP常用脚本</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#NMAP脚本分析与简单编写"><span class="toc-number">1.4.</span> <span class="toc-text">NMAP脚本分析与简单编写</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#小节"><span class="toc-number">1.5.</span> <span class="toc-text">小节</span></a></li></ol></li></ol></div></section><section class="hide sidebar-overview"><div class="sidebar-author"><img class="sidebar-author-avatar" src="/images/avatar.png" alt="avatar"><p class="sidebar-author-motto">士不可以不弘毅，任重而道远</p></div><div class="sidebar-social"><span class="sidebar-social-item"><a href="https://github.com/Blue-And-White" target="_blank" title="github → https://github.com/Blue-And-White"><i class="fa fa-github"></i></a></span><span class="sidebar-social-item"><a href="tencent://QQInterLive/?Cmd=2&amp;Uin=597151269" target="_blank" title="qq → tencent://QQInterLive/?Cmd=2&amp;Uin=597151269"><i class="fa fa-qq"></i></a></span><span class="sidebar-social-item"><a href="mailto:blueandwhite@yeah.net" target="_blank" title="mail → mailto:blueandwhite@yeah.net"><i class="fa fa-envelope-o"></i></a></span></div><div class="sidebar-state"><div class="sidebar-state-item sidebar-state-posts"><a href="/archives/"><div class="sidebar-state-item-count">16</div><div class="sidebar-state-item-name">文章</div></a></div><div class="sidebar-state-item sidebar-state-categories"><a href="/categories/"><div class="sidebar-state-item-count">10</div><div class="sidebar-state-item-name">分类</div></a></div><div class="sidebar-state-item sidebar-state-tags"><a href="/tags/"><div class="sidebar-state-item-count">20</div><div class="sidebar-state-item-name">标签</div></a></div></div><div class="sidebar-cc"><a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank"><img src="/images/cc-by-nc-sa.svg" alt="creative commons"></a></div></section><div class="sidebar-progress"><div class="sidebar-progress-read"><span>你已阅读了</span><span class="sidebar-progress-number"></span></div><div class="sidebar-progress-line"></div></div></div></aside><div class="main-content code-highlight"><div class="post-header"><h1 class="post-title">kali工具入门4-namp的使用（下）</h1><div class="post-meta"><span class="post-meta-create"><i class="fa fa-calendar-o"></i><span>发表于 </span><span>2018-12-17</span></span><span class="post-meta-update"><i class="fa fa-calendar-check-o"></i><span>更新于 </span><span>2019-07-10</span></span><span class="post-meta-reading-count"><i class="fa fa-eye"></i><span>阅读次数 </span><span id="busuanzi_value_page_pv"></span></span></div></div><div class="post-body"><p>kali工具入门4-namp的使用（下）</p>
+<h1 id="kali工具入门4-namp的使用（下）"><a href="#kali工具入门4-namp的使用（下）" class="headerlink" title="kali工具入门4-namp的使用（下）"></a>kali工具入门4-namp的使用（下）</h1><h2 id="前情提要"><a href="#前情提要" class="headerlink" title="前情提要"></a>前情提要</h2><p> 前面我们介绍了NMAP的简单使用比如说一些主机探测，版本探测，端口扫描等等，那么在实际我们进行工作的时候我们常常会有一些需求，比如说这个被墙了，或者我们需要筛选一部分内容，这个都是我们需要注意的，有的时候我们还会有自己的一些需求，这个时候我们就要用到脚本了，脚本我们在前面也介绍过，这里我们来详细的说明一下。</p>
+<p> ··青花</p>
+<h2 id="NMAP脚本"><a href="#NMAP脚本" class="headerlink" title="NMAP脚本"></a>NMAP脚本</h2><p> Nmap脚本使用lua编写的，lua语言是什么这里我们就不详细说明了，也属于C语言一族，这个我们一会我们会进行一个简单的介绍，我们对于脚本的说明主要在于一些功能性的脚本说明。</p>
+<p> 我们先来说说如何调用NMAP脚本，前面我们说过我们利用</p>
+<p>–scritp</p>
+<p>这个参数我们来调用脚本。</p>
+<p>我们可以在Nmap的目录里面找到我们存储着脚本的目录，我们发现这里又好多。</p>
+<p>我们随便打开一个看看。</p>
+<p><img src="http://139.224.115.186/images/1542552592877.png" alt="1542552592877"></p>
+<p>这个就是我们探测僵尸主机的僵尸脚本。上节我们说到这个了。</p>
+<p>下面我们说明一下脚本的简单分类，这个是在乌云知识库里面提取的。</p>
+<pre><code>auth: 负责处理鉴权证书（绕开鉴权）的脚本
+
+broadcast: 在局域网内探查更多服务开启状况，如dhcp/dns/sqlserver等服务
+
+brute: 提供暴力破解方式，针对常见的应用如http/snmp等
+
+default: 使用-sC或-A选项扫描时候默认的脚本，提供基本脚本扫描能力
+
+discovery: 对网络进行更多的信息，如SMB枚举、SNMP查询等
+
+dos: 用于进行拒绝服务攻击
+
+exploit: 利用已知的漏洞入侵系统
+
+external: 利用第三方的数据库或资源，例如进行whois解析
+
+fuzzer: 模糊测试的脚本，发送异常的包到目标机，探测出潜在漏洞 intrusive: 入侵性的脚本，此类脚本可能引发对方的IDS/IPS的记录或屏蔽
+
+malware: 探测目标机是否感染了病毒、开启了后门等信息
+
+safe: 此类与intrusive相反，属于安全性脚本
+
+version: 负责增强服务与版本扫描（Version Detection）功能的脚本
+
+vuln: 负责检查目标机是否有常见的漏洞（Vulnerability），如是否有MS08_067 </code></pre><p>我们看到目录有很多脚本，这里我们也没办法都一个一个的详细介绍，这里呢我们选择一些常用的进行介绍。</p>
+<h2 id="NMAP常用脚本"><a href="#NMAP常用脚本" class="headerlink" title="NMAP常用脚本"></a>NMAP常用脚本</h2><p>检测一些漏洞是否存在的脚本</p>
+<p><img src="http://139.224.115.186/images/1542552635751.png" alt="1542552635751"></p>
+<p>sshv1.nse</p>
+<p>这个脚本主要用于探测是否SSH使用过时的SSH1版本服务。</p>
+<p>另外我们在进行信息搜集的时候常常要去爆破一些文件服务器等操作。</p>
+<p>这里我们来介绍几个smtp协议的脚本。</p>
+<p>smtp-brute.nse</p>
+<p>这个脚本用于爆破smtp邮件的服务。</p>
+<p>smtp-vuln-cve2011-1764.nse</p>
+<p>检查EXIM SMTP服务器中的格式字符串漏洞</p>
+<p>（版本4.70到4.75）具有域名密钥识别邮件（DKIM）支持</p>
+<p>（CVE-2011-1764）。DKIM日志记录机制没有使用格式字符串</p>
+<p>记录DKIM签名头字段的某些部分时的说明符。</p>
+<p>一个能够发送电子邮件的远程攻击者可以利用这个漏洞。</p>
+<p>并使用EXM守护进程的特权执行任意代码。</p>
+<p>dns-zone-transfer.nse</p>
+<p>这个脚本用于检查目标DNS是否允许传送，如果允许，你懂的。</p>
+<p>mysql-empty-password.nse</p>
+<p>这个用于扫描mysql，root的空密码。</p>
+<p>mysql-brute.nse  </p>
+<p>Mysql弱口令爆破</p>
+<p> 像这个样的好多脚本，我们就不一一介绍了，我们可以在网上查阅一些文章，或者自己慢慢探索，限于篇幅，我们就不一一详细介绍了。</p>
+<h2 id="NMAP脚本分析与简单编写"><a href="#NMAP脚本分析与简单编写" class="headerlink" title="NMAP脚本分析与简单编写"></a>NMAP脚本分析与简单编写</h2><p> 首先呢，我们要找到脚本的文件。</p>
+<pre><code>/usr/share/nmap/scripts </code></pre><p>它们都在这个文件夹里面。</p>
+<p><img src="http://139.224.115.186/images/1542508970503.png" alt="1542508970503"></p>
+<p>打开脚本</p>
+<p><img src="http://139.224.115.186/images/1542509896232.png" alt="1542509896232"></p>
+<p>我们看到这里面我们打开这里就是描述信息，里面描述了脚本的功能还有作者信息。</p>
+<p>继续向下看</p>
+<p><img src="http://139.224.115.186/images/1542510025639.png" alt="1542510025639"></p>
+<p>这里的prerule还有action我看看到这个就是核心了。这里面定义了好多规则。</p>
+<p>最核心的是ACTION，我们看这里面调用了UDP套接字，掩码，端口等信息，下面是规则。这个使用LUA编写的NSE脚本。</p>
+<p>那么下面我们来说明一下，如何编写属于我们的NSE吧！</p>
+<p>我们先利用Lua编写portrule这个是端口的规则。action这里定义的是函数规则。</p>
+<p>比如说，这里我们弄一个http端口80的开放情况。</p>
+<p><img src="http://139.224.115.186/images/1542513841368.png" alt="1542513841368"></p>
+<p>我们简单的编写一些过滤规则。</p>
+<p><img src="http://139.224.115.186/images/1542513891649.png" alt="1542513891649"></p>
+<p><img src="http://139.224.115.186/images/1542513907531.png" alt="1542513907531"></p>
+<p>我们看到，我们的脚本成功运行了。</p>
+<p>我们也可以利用lua以及调用一些nmap的规则编写脚本，完成我们更多的一些骚操作。</p>
+<p><a href="https://www.cnblogs.com/liun1994/p/7041531.html" target="_blank" rel="noopener">参考文章</a></p>
+<h2 id="小节"><a href="#小节" class="headerlink" title="小节"></a>小节</h2><p> 由于篇幅有限，对于更多的操作，我们没有办法一一列举，本文只能举一个简单的例子进行说明，给大家一个简单的方向，后续学习还是要靠大家自己的，nmap是我们渗透测试的一大利器，利用好了，可以叫我们事半功倍！</p>
+</div><footer class="post-footer"><div class="post-footer-end"><span>------</span><span>本文结束，感谢您的阅读</span><span>------</span></div><div class="post-footer-copyright"><div class="copyright-author"><span class="copyright-name">本文作者:</span><span class="copyright-value"><a href="http://yoursite.com">青花@Blue_And_White</a></span></div><div class="copyright-link"><span class="copyright-name">本文链接:</span><span class="copyright-value"><a href="http://yoursite.com/2018/12/17/kali-e5-b7-a5-e5-85-b7-e5-85-a5-e9-97-a84-namp-e7-9a-84-e4-bd-bf-e7-94-a8-ef-bc-88-e4-b8-8b-ef-bc-89/">http://yoursite.com/2018/12/17/kali-e5-b7-a5-e5-85-b7-e5-85-a5-e9-97-a84-namp-e7-9a-84-e4-bd-bf-e7-94-a8-ef-bc-88-e4-b8-8b-ef-bc-89/</a></span></div><div class="copyright-notice"><span class="copyright-name">版权声明:</span><span class="copyright-value">本博客所有文章除特别声明外，均采用  <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" rel="external nofollow" target="_blank">BY-NC-SA</a> 许可协议。转载请注明出处！</span></div></div><div class="post-footer-tags"><i class="fa fa-tags icon"></i><span><a href="http://yoursite.com/tags/网络探测/" title="网络探测">网络探测</a></span><span><a href="http://yoursite.com/tags/nmap/" title="nmap">nmap</a></span></div><nav id="paginator"><div class="post-paginator"><div class="article-prev pull-left"><a href="/2018/12/18/e5-85-b3-e4-ba-8edvwa-e9-9d-b6-e5-9c-ba-e7-9a-84-e5-91-bd-e4-bb-a4-e6-89-a7-e8-a1-8c-e6-bc-8f-e6-b4-9e-e5-b0-8f-e6-b5-8b/"><i class="fa fa-chevron-left"></i><span class="title">关于DVWA靶场的命令执行漏洞小测</span></a></div><div class="article-next pull-right"><a href="/2018/12/17/kali-e5-b7-a5-e5-85-b7-e5-85-a5-e9-97-a84-nmap-e7-9a-84-e4-bd-bf-e7-94-a8-ef-bc-88-e4-b8-ad-ef-bc-89/"><span class="title">kali工具入门4-nmap的使用（中）</span><i class="fa fa-chevron-right"></i></a></div></div></nav></footer></div></div></main><footer id="footer"><div class="footer-inner"><div><span>&copy; 2019</span><span class="fa fa-paper-plane heart-beat footer-separator" style="color: #ff0000"></span><span>青花@Blue_And_White.</span></div><div><span class="footer-powered">由 <a href="http://hexo.io/" title="hexo" target="_blank" rel="noopener">hexo</a> 强力驱动</span><span> v3.9.0.</span></div><div class="busuanzi"><script async src="https://cdn.jsdelivr.net/gh/sukkaw/busuanzi@2.3/bsz.pure.mini.js"></script><span class="busuanzi-uv"><i class="fa fa-user"></i><span>访问人数 </span><span id="busuanzi_value_site_uv"></span></span><span class="separator">|</span><span class="busuanzi-pv"><i class="fa fa-eye"></i><span>浏览总量 </span><span id="busuanzi_value_site_pv"></span></span></div></div></footer><div id="back-top"><div class="back-top-inner" title="回到顶部"><i class="fa fa-rocket"></i></div></div></div><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script><script src="/js/utils.js?v=1.0.2"></script><script src="/js/scroll.js?v=1.0.2"></script><script src="/js/header.js?v=1.0.2"></script><script src="/js/sidebar.js?v=1.0.2"></script><script src="/js/post.js?v=1.0.2"></script></body></html>
