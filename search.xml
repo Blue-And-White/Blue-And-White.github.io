@@ -2,6 +2,86 @@
 <search>
   <entry>
     <title>C语言+数据结构复习小记1</title>
+    <url>/2020/03/01/C%E8%AF%AD%E8%A8%80+%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0%E5%B0%8F%E8%AE%B02/</url>
+    <content><![CDATA[<h1 id="C语言-数据结构复习小记2"><a href="#C语言-数据结构复习小记2" class="headerlink" title="C语言+数据结构复习小记2"></a>C语言+数据结构复习小记2</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>​            上回说到指针的一些内容，也简单的剖析了一下指针进一层的东西，相信能够帮助大家（特别是初学者）更好地理解指针，更快上手。这里我们继续向下进行复习回顾，来说一些我一开始作为小白比较懵逼的内容，毕竟这对我们的编程而言是十分重要的，并且对于我们的程序效率提升是大有帮助的。</p>
+<h2 id="1-C语言的结构体，共用体"><a href="#1-C语言的结构体，共用体" class="headerlink" title="1.C语言的结构体，共用体"></a>1.C语言的结构体，共用体</h2><p>​        对于一个编程的初学者来说，结构体这一块如果乍一看其实挺懵逼的，但是我们换个角度想，这个就十分简单了。在学习C语言的过程中，我们肯定接触了C语言的类型啊，比如int（整型）char（字符型）等等，所谓结构体，其实我们大可以理解为我们自己创造的一个数据类型。</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">Qinghua</span>&#123;</span></span><br><span class="line">	<span class="keyword">char</span> name;</span><br><span class="line">	<span class="keyword">int</span>  date;</span><br><span class="line"></span><br><span class="line">&#125;qinghua;</span><br></pre></td></tr></table></figure></div>
+
+<p>我们看上面这一段代码，struct 声明结构体，Qinghua是我们的类型名称，就相当于我们的int(整型)，里面是我们对于我们自己创在的这个类型具体的内容，如果学过面向对象类的编程（PS：我不知道我这样类比准不准确），我们大可以认为我们定义了一个类。后面最后一行的qinghua就是我们的变量名字了！</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">int</span> qinghua;</span><br><span class="line">Qinghua  qinghua1;</span><br></pre></td></tr></table></figure></div>
+
+<p>其实上面的代码，就相当于我们定义了一个类型，然后又那这个类型衍生出来一个变量。</p>
+<p>另外一个跟结构体类似的就是我们所谓的Union（共用体）</p>
+<p>关于Union我们看代码的定义方式</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="keyword">union</span> Data</span><br><span class="line">&#123;</span><br><span class="line">   <span class="keyword">int</span> i;</span><br><span class="line">   <span class="keyword">float</span> f;</span><br><span class="line">   <span class="keyword">char</span>  str[<span class="number">20</span>];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></div>
+
+<p>这个跟我们的结构体是一样的，并且调用方式都是一样的都用成员访问  .   如果我们用指针我们用-&gt;来访问。</p>
+<p>那么哪里跟结构体不同呢，我们来探讨一下。</p>
+<p>我在网上找了一段代码，能够很好地说明这个区别，这里我们来看一下代码的结果以及我们的分析思考。</p>
+<p><a href="http://139.224.115.186/images/%5Cimage-20200307234209587.png" data-fancybox="group" data-caption="image-20200307234209587" class="fancybox"><img src="http://139.224.115.186/images/%5Cimage-20200307234209587.png" alt="image-20200307234209587" title="image-20200307234209587"></a></p>
+<p>我们看我们这段代码里面利用了共用体，并且我们同时给共用体的里面的三个变量同时赋值。我们却发现打印出来的除了我们定义的最后的一个字符串是正确的其他的都错误了，为什么会这样呢？</p>
+<p>其实这就是共用体的结果，共用体共用体，其实就是我们可以定义一个能够变换好多种类型的结构体。这里面我们看到最长的数据类型应该是字符串，并且我们对其全部赋值，然后覆盖了前面的内容，从而造成Int  float型数据失真了。</p>
+<p>共用体使我们用来拿出来一个结构体其中一个变量的结构，他的大小所占字节通常是里面所占字节最多的数据类型。比如我们上图就是char（字符型）</p>
+<h2 id="2-C语言内存管理"><a href="#2-C语言内存管理" class="headerlink" title="2.C语言内存管理"></a>2.C语言内存管理</h2><p>​        说实话，刚上大学的时候，我对计算机不管是软件硬件，一无所知，从前电脑在我手里就是打游戏的工具，我当时在开学之前自己了解了一下计算机专业，暑假买了本C语言，看了看，当时对于计算机一无所知的我，我好多地方超级懵逼，不懂计算机的组成原理，操作系统的原理，对于内存这玩意，我一直跟存储空间弄混淆。我那时候认为内存等价于存储空间，我真正明白了两者的区别还是在大一下学期，由于我从前打游戏比较多，我也很懒，我就想解放双手，写点脚本什么的，然后去网上看，说从汇编开始（网上教程易语言偏多，其实你要是玩的6，啥语言都能写，只要能够触及操作系统底层），买了本汇编的书，然后慢慢的深入，不懂得地方自己再去百度，反过头来一思考发现清晰了不少，这样叫我领悟了，计算机这东西，你动手去做，就会发现你的理解会更上一层楼，有自己的理解那种感觉，是真的很爽。好了，废话不多说了，此篇我会用我后来的理解来说以下C语言的这个对于跟我从前一样入门计算机的小白所碰到的懵逼事。</p>
+<p>​    </p>
+<h3 id="2-1-啥叫内存？"><a href="#2-1-啥叫内存？" class="headerlink" title="2.1 啥叫内存？"></a>2.1 啥叫内存？</h3><p>​        我们来说一说这个问题啊，啥叫内存。在我们印象里面内存都是这样的。</p>
+<p>就好比我们做一个情景模拟（PS：这两个人是不懂计算机的外行人或者计算机的新手比如大一的我）</p>
+<p>小王：你看我买了一个手机某PhoneX，内存128G</p>
+<p>小李：哇，那么多，用的过来吗，你下多少小视频啊</p>
+<p>此时一名大佬路过，偶然听到了这两个人的谈话，这兄弟一脸懵逼，现在技术这么猛了吗？个人机（保守点说，因为你不知道好多大佬他们能搞出什么东西来）弄128G的内存？？？</p>
+<p><a href="http://139.224.115.186/images/%5Cimage-20200308000631056.png" data-fancybox="group" data-caption="image-20200308000631056" class="fancybox"><img src="http://139.224.115.186/images/%5Cimage-20200308000631056.png" alt="image-20200308000631056" title="image-20200308000631056"></a></p>
+<p>对于我们一开始的外行人来说就是这样的，但其实这个东西叫存储空间，我们不知道怎么搞得传来传去就把这个叫内存了。（PS：这里我当时大一买U盘，就吃了没知识的亏，我居然相信有1T容量的U盘，现在想起来还很可笑，算是智商税了）</p>
+<p>下面我们可能涉及到一些微机原理的内容，不要害怕，我会尽量用通俗易懂的语言来讲解这个东西。</p>
+<p>我们的计算机在开机的时候，当我们执行一些任务，就需要与CPU交互就行计算处理，计算机的操作都是在CPU中进行二进制运算的运行的，虽然说CPU中有一些寄存器，但是这些寄存器是负责与芯片快速交互运算的其存取速度极高，与CPU相匹配，但是我们在执行大型任务，需要很多运算，频繁调用外部内容与内部交互，就需要一个能够与CPU运算速度进行匹配的存取空间，这个空间的最大特点就是尽量与CPU的速度匹配，但是我们现在的技术是很难做到的，于是人们发明了内存（这个还有很多的小分类）。</p>
+<p>百度上面我看到过这样一个很生动的例子，在我们的书房，我们相当于CPU，我们的书架就是我们的存储空间，上面放着好多的书籍，我们要研究东西的时候，我们要把这些东西放到我们的桌子上面，我们的桌子就相当于内存。这样我们才能执行任务，这样是不是更加通俗易懂了一些呢，电脑的内存其实就是如此。</p>
+<p>当我们运行C程序的时候他就会加载到内存，然后进行执行，不管多小的程序，只要执行，都会被加载到内存当中，执行完毕看情况释放内存。</p>
+<p>C语言的函数给予了我们一些对内存进行操作的方法，这里比如说申请释放，这个会给我们的程序很大的便利。</p>
+<table>
+<thead>
+<tr>
+<th align="left">序号</th>
+<th align="left">函数和描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">1</td>
+<td align="left"><strong>void *calloc(int num, int size);</strong> 在内存中动态地分配 num 个长度为 size 的连续空间，并将每一个字节都初始化为 0。所以它的结果是分配了 num*size 个字节长度的内存空间，并且每个字节的值都是0。</td>
+</tr>
+<tr>
+<td align="left">2</td>
+<td align="left"><strong>void free(void *address);</strong> 该函数释放 address 所指向的内存块,释放的是动态分配的内存空间。</td>
+</tr>
+<tr>
+<td align="left">3</td>
+<td align="left"><strong>void *malloc(int num);</strong> 在堆区分配一块指定大小的内存空间，用来存放数据。这块内存空间在函数执行完成后不会被初始化，它们的值是未知的。</td>
+</tr>
+<tr>
+<td align="left">4</td>
+<td align="left"><strong>void *realloc(void *address, int newsize);</strong> 该函数重新分配内存，把内存扩展到 <strong>newsize</strong>。</td>
+</tr>
+</tbody></table>
+<p>这是我们C语言的一些内存函数。需要在“stdlib.h”中引用</p>
+<p>那么这些东西我们怎么用呢？</p>
+<p>我们来简单的说明一下，如果我们要定义一个班全体同学的姓名（这应该不超过50人），存放到一个数组里面，那么我们就直接给数组定义大小为50就行了，但是有一个问题，当这个班级后来过来了几个插班的同学，人数多了，那么原先的不够用啊，这个怎么办，如果往里面添加就会溢出，程序就会崩溃，那么有没有一种方法叫我们能够便利一些呢？当然有，就是我们的这个动态内存分配函数（其实也不是完全动态，他就是要了一块更大的内存存放这个东西，会填充为0全部都是，这里叫我有个想法，如果我们利用函数写死循环，然后无限要内存，会不会把机器要死掉？有时间在虚拟机上试一试），不够用继续给点。这里有一个问题，那就是操作系统不是会在程序运行结束之后自动释放内存吗？为什么还需要我们用函数释放内存，这个其实是为了叫我们的程序运行更加灵活流畅，你想想，如果内存满了，这个程序调用新的数据但是内存是满的进步来，这个程序就被挂起了，等待着其他的任务执行结束，才能进一步的继续运行，这样会很影响我们的程序运行速度。</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="keyword">char</span> name[<span class="number">100</span>];</span><br><span class="line">   <span class="keyword">char</span> *description;</span><br><span class="line"> </span><br><span class="line">   <span class="built_in">strcpy</span>(name, <span class="string">"Zara Ali"</span>);</span><br><span class="line"> </span><br><span class="line">   <span class="comment">/* 动态分配内存 */</span></span><br><span class="line">   description = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>( <span class="number">200</span> * <span class="keyword">sizeof</span>(<span class="keyword">char</span>) );</span><br><span class="line">   <span class="keyword">if</span>( description == <span class="literal">NULL</span> )</span><br><span class="line">   &#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Error - unable to allocate required memory\n"</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">   &#123;</span><br><span class="line">      <span class="built_in">strcpy</span>( description, <span class="string">"Zara ali a DPS student in class 10th"</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">"Name = %s\n"</span>, name );</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">"Description: %s\n"</span>, description );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<p>这段代码给我们弄了一个引用内存管理函数的例子，这个例子中我们申请了一段内存空间大小为char的长度乘以200.</p>
+<p>这个操作我们可以利用表中的1 还有3这两个函数进行操作，这两个函数都是要一块内存空间，那么这两个函数有什么区别呢？malloc函数在要内存时候，是没有初始化的，也就是内存有东西，这个东西是什么，我们不知道。而calloc在要这块内存之后，会进行初始化，全部用0填充。</p>
+<p><a href="http://139.224.115.186/images/%5Cimage-20200308183933825.png" data-fancybox="group" data-caption="image-20200308183933825" class="fancybox"><img src="http://139.224.115.186/images/%5Cimage-20200308183933825.png" alt="image-20200308183933825" title="image-20200308183933825"></a></p>
+<p>当然，我们也可以重新的调整并且释放内存。</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">c</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight c"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdlib.h&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string.h&gt;</span></span></span><br><span class="line"> </span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">   <span class="keyword">char</span> name[<span class="number">100</span>];</span><br><span class="line">   <span class="keyword">char</span> *description;</span><br><span class="line"> </span><br><span class="line">   <span class="built_in">strcpy</span>(name, <span class="string">"Zara Ali"</span>);</span><br><span class="line"> </span><br><span class="line">   <span class="comment">/* 动态分配内存 */</span></span><br><span class="line">   description = (<span class="keyword">char</span> *)<span class="built_in">malloc</span>( <span class="number">30</span> * <span class="keyword">sizeof</span>(<span class="keyword">char</span>) );</span><br><span class="line">   <span class="keyword">if</span>( description == <span class="literal">NULL</span> )</span><br><span class="line">   &#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Error - unable to allocate required memory\n"</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">   &#123;</span><br><span class="line">      <span class="built_in">strcpy</span>( description, <span class="string">"Zara ali a DPS student."</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="comment">/* 假设您想要存储更大的描述信息 */</span></span><br><span class="line">   description = (<span class="keyword">char</span> *) <span class="built_in">realloc</span>( description, <span class="number">100</span> * <span class="keyword">sizeof</span>(<span class="keyword">char</span>) );</span><br><span class="line">   <span class="keyword">if</span>( description == <span class="literal">NULL</span> )</span><br><span class="line">   &#123;</span><br><span class="line">      <span class="built_in">fprintf</span>(<span class="built_in">stderr</span>, <span class="string">"Error - unable to allocate required memory\n"</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   <span class="keyword">else</span></span><br><span class="line">   &#123;</span><br><span class="line">      <span class="built_in">strcat</span>( description, <span class="string">"She is in class 10th"</span>);</span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">"Name = %s\n"</span>, name );</span><br><span class="line">   <span class="built_in">printf</span>(<span class="string">"Description: %s\n"</span>, description );</span><br><span class="line"> </span><br><span class="line">   <span class="comment">/* 使用 free() 函数释放内存 */</span></span><br><span class="line">   <span class="built_in">free</span>(description);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></div>
+
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>​        本节我们简单探讨了一下C语言结构体和内存的一些问题作用，也简单的做了一下解释，后面我们会深入到C语言的一些排序算法，有些书籍会在C语言的教程中给出，有些也会在数据结构中给出，不过这个是我们深入学习编程的基础，下节见！</p>
+]]></content>
+      <categories>
+        <category>胡乱折腾</category>
+      </categories>
+      <tags>
+        <tag>c语言</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>C语言+数据结构复习小记1</title>
     <url>/2020/02/28/C%E8%AF%AD%E8%A8%80+%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E5%A4%8D%E4%B9%A0%E5%B0%8F%E8%AE%B0/</url>
     <content><![CDATA[<h1 id="C语言-数据结构复习小记1"><a href="#C语言-数据结构复习小记1" class="headerlink" title="C语言+数据结构复习小记1"></a>C语言+数据结构复习小记1</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>​        最近由于一些原因，要用到C语言，由于学习C语言是大概三年前了，后来学习了python，JS之后就很少用到C了，考研的时候由于没选择数据结构，也是没有用到C语言。C语言作为操作系统的底层语言（对于C以及Linux系统而言），以及内核级别的操作有着很大的作用，当然也被大家很多人作为第一门编程语言学习。废话不多说，特此记录一下这一段时间复习C语言，以及个人对于一些问题的见解，提出来与大家交流一下。</p>
 <h2 id="1-C语言基础训练"><a href="#1-C语言基础训练" class="headerlink" title="1.C语言基础训练"></a>1.C语言基础训练</h2><p>​    由于是复习，对于基础问题我们不做深究（PS：什么主函数，什么基本输入输出库啊，包括安装），这里我们就来探讨一下当时我在第一次学习C语言的时候几个我第一次学习比较懵逼的点，这些东西有些比较抽象。（PS：当时第一次学对于*  **这种调用指针的方法当时提出了自己的一些理解，但是感觉不够透彻，后来买了本汇编语言看完之后，感觉清新了不少）</p>
