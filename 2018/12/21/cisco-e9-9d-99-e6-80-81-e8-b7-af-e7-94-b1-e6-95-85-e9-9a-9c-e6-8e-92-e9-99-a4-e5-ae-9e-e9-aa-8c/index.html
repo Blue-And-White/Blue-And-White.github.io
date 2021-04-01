@@ -1,0 +1,347 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta name="generator" content="Hexo 3.9.0"><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5"><title>CISCO静态路由故障排除实验 | 青花@Blue_And_White</title><meta name="description" content="CISCO静态路由故障排除实验"><meta name="keywords" content="网络故障排除,计算机网络"><meta name="author" content="青花@Blue_And_White,blueandwhite@yeah.net"><meta name="copyright" content="青花@Blue_And_White"><meta name="format-detection" content="telephone=no"><link rel="shortcut icon" href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/12/touxiang.jpg"><link rel="preconnect" href="//cdn.jsdelivr.net"><link rel="preconnect" href="https://fonts.googleapis.com" crossorigin><link rel="preconnect" href="//busuanzi.ibruce.info"><meta name="twitter:card" content="summary"><meta name="twitter:title" content="CISCO静态路由故障排除实验"><meta name="twitter:description" content="CISCO静态路由故障排除实验"><meta name="twitter:image" content="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/12/u19474976303221410136fm26gp0.jpg"><meta property="og:type" content="article"><meta property="og:title" content="CISCO静态路由故障排除实验"><meta property="og:url" content="https://www.evil-qinghua.me/2018/12/21/cisco-e9-9d-99-e6-80-81-e8-b7-af-e7-94-b1-e6-95-85-e9-9a-9c-e6-8e-92-e9-99-a4-e5-ae-9e-e9-aa-8c/"><meta property="og:site_name" content="青花@Blue_And_White"><meta property="og:description" content="CISCO静态路由故障排除实验"><meta property="og:image" content="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/12/u19474976303221410136fm26gp0.jpg"><meta http-equiv="Cache-Control" content="no-transform"><meta http-equiv="Cache-Control" content="no-siteapp"><script src="https://cdn.jsdelivr.net/npm/js-cookie/dist/js.cookie.min.js"></script><script>const autoChangeMode = '1'
+var t = Cookies.get("theme");
+if (autoChangeMode == '1'){
+const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches
+const isLightMode = window.matchMedia("(prefers-color-scheme: light)").matches
+const isNotSpecified = window.matchMedia("(prefers-color-scheme: no-preference)").matches
+const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+
+if (t === undefined){
+  if (isLightMode) activateLightMode()
+  else if (isDarkMode) activateDarkMode()
+  else if (isNotSpecified || hasNoSupport){
+    console.log('You specified no preference for a color scheme or your browser does not support it. I Schedule dark mode during night time.')
+    now = new Date();
+    hour = now.getHours();
+    isNight = hour < 6 || hour >= 18
+    isNight ? activateDarkMode() : activateLightMode()
+}
+} else if (t == 'light') activateLightMode()
+else activateDarkMode()
+
+
+} else if (autoChangeMode == '2'){
+  now = new Date();
+  hour = now.getHours();
+  isNight = hour < 6 || hour >= 18
+  if(t === undefined) isNight? activateDarkMode() : activateLightMode()
+  else if (t === 'light') activateLightMode()
+  else activateDarkMode() 
+} else {
+  if ( t == 'dark' ) activateDarkMode()
+  else if ( t == 'light') activateLightMode()
+}
+
+function activateDarkMode(){
+  document.documentElement.setAttribute('data-theme', 'dark')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+    document.querySelector('meta[name="theme-color"]').setAttribute('content','#000')
+  }
+}
+function activateLightMode(){
+  document.documentElement.setAttribute('data-theme', 'light')
+  if (document.querySelector('meta[name="theme-color"]') !== null){
+  document.querySelector('meta[name="theme-color"]').setAttribute('content','#fff')
+  }
+}</script><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css"><link rel="canonical" href="https://www.evil-qinghua.me/2018/12/21/cisco-e9-9d-99-e6-80-81-e8-b7-af-e7-94-b1-e6-95-85-e9-9a-9c-e6-8e-92-e9-99-a4-e5-ae-9e-e9-aa-8c/"><link rel="prev" title="cisco动态静态路由问题排查(练习题2，3)" href="https://www.evil-qinghua.me/2018/12/22/cisco动态静态路由问题排查(练习题2，3)/"><link rel="next" title="关于DVWA靶场的命令执行漏洞小测" href="https://www.evil-qinghua.me/2018/12/18/e5-85-b3-e4-ba-8edvwa-e9-9d-b6-e5-9c-ba-e7-9a-84-e5-91-bd-e4-bb-a4-e6-89-a7-e8-a1-8c-e6-bc-8f-e6-b4-9e-e5-b0-8f-e6-b5-8b/"><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web"><script>var GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容:${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"cookieDomain":"https://xxx/","msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"简"},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  bookmark: {
+    title: 'Snackbar.bookmark.title',
+    message_prev: '按',
+    message_next: '键将本页加入书签'
+  },
+  runtime_unit: '天',
+  runtime: true,
+  copyright: undefined,
+  ClickShowText: undefined,
+  medium_zoom: false,
+  fancybox: true,
+  Snackbar: undefined,
+  baiduPush: false,
+  isHome: false,
+  isPost: true
+  
+}</script></head><body><canvas class="fireworks"></canvas><header> <div id="page-header"><span class="pull_left" id="blog_name"><a class="blog_title" id="site-name" href="/">青花@Blue_And_White</a></span><span class="toggle-menu pull_right close"><a class="site-page"><i class="fa fa-bars fa-fw" aria-hidden="true"></i></a></span><span class="pull_right menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于我</span></a></div></div></span><span class="pull_right" id="search_button"><a class="site-page social-icon search"><i class="fa fa-search fa-fw"></i><span> 搜索</span></a></span></div></header><div id="mobile-sidebar"><div id="menu_mask"></div><div id="mobile-sidebar-menus"><div class="mobile_author_icon"><img class="avatar-img" src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/12/touxiang.jpg" onerror="onerror=null;src='https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/404.jpg'" alt="avatar"></div><div class="mobile_post_data"><div class="mobile_data_item is-center"><div class="mobile_data_link"><a href="/archives/"><div class="headline">文章</div><div class="length_num">24</div></a></div></div><div class="mobile_data_item is-center">      <div class="mobile_data_link"><a href="/tags/"><div class="headline">标签</div><div class="length_num">27</div></a></div></div><div class="mobile_data_item is-center">     <div class="mobile_data_link"><a href="/categories/"><div class="headline">分类</div><div class="length_num">12</div></a></div></div></div><hr><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fa fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fa fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fa fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fa fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fa fa-link"></i><span> 友情链接</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fa fa-heart"></i><span> 关于我</span></a></div></div></div><div id="mobile-sidebar-toc"><div class="toc_mobile_headline">目录</div><div class="sidebar-toc__content"><ol class="toc_mobile_items"><li class="toc_mobile_items-item toc_mobile_items-level-1"><a class="toc_mobile_items-link" href="#CISCO网络故障排除1（静态路由的故障排除）"><span class="toc_mobile_items-number">1.</span> <span class="toc_mobile_items-text">CISCO网络故障排除1（静态路由的故障排除）</span></a><ol class="toc_mobile_items-child"><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#前言"><span class="toc_mobile_items-number">1.1.</span> <span class="toc_mobile_items-text">前言</span></a></li><li class="toc_mobile_items-item toc_mobile_items-level-2"><a class="toc_mobile_items-link" href="#第一题：静态路由故障排除"><span class="toc_mobile_items-number">1.2.</span> <span class="toc_mobile_items-text">第一题：静态路由故障排除</span></a></li></ol></li></ol></div></div></div><div id="body-wrap"><i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true">     </i><div class="auto_open" id="sidebar"><div class="sidebar-toc"><div class="sidebar-toc__title">目录</div><div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span class="progress-num">0</span><span class="progress-percentage">%</span><div class="sidebar-toc__progress-bar">     </div></div><div class="sidebar-toc__content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#CISCO网络故障排除1（静态路由的故障排除）"><span class="toc-number">1.</span> <span class="toc-text">CISCO网络故障排除1（静态路由的故障排除）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-number">1.1.</span> <span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#第一题：静态路由故障排除"><span class="toc-number">1.2.</span> <span class="toc-text">第一题：静态路由故障排除</span></a></li></ol></li></ol></div></div></div><main id="content-outer"><div id="top-container" style="background-image: url(https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/12/u19474976303221410136fm26gp0.jpg)"><div id="post-info"><div id="post-title"><div class="posttitle">CISCO静态路由故障排除实验</div></div><div id="post-meta"><time class="post-meta__date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 发表于 2018-12-21<span class="post-meta__separator">|</span><i class="fa fa-history fa-fw" aria-hidden="true"></i> 更新于 2020-06-29</time><span class="post-meta__separator">|</span><span><i class="fa fa-inbox post-meta__icon fa-fw" aria-hidden="true"></i><a class="post-meta__categories" href="/categories/胡乱折腾/">胡乱折腾</a></span><div class="post-meta-wordcount"><div class="post-meta-pv-cv"><span><i class="fa fa-eye post-meta__icon fa-fw" aria-hidden="true"> </i>阅读量:</span><span id="busuanzi_value_page_pv"></span></div></div></div></div></div><div class="layout layout_post" id="content-inner">   <article id="post"><div class="article-container" id="post-content"><p>CISCO网络故障排除几道小题的解析</p>
+<h1 id="CISCO网络故障排除1（静态路由的故障排除）"><a href="#CISCO网络故障排除1（静态路由的故障排除）" class="headerlink" title="CISCO网络故障排除1（静态路由的故障排除）"></a>CISCO网络故障排除1（静态路由的故障排除）</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近在学习一些网络里面的一些故障的排除，这里面我们借鉴了几个CISCO的小题来简单的解析说明一下。</p>
+<p><a href="https://pan.baidu.com/s/1Cb2\_jhmPqZ2GPR\_arMGINA" target="_blank" rel="noopener">https://pan.baidu.com/s/1Cb2\_jhmPqZ2GPR\_arMGINA</a></p>
+<p>提取码：t5tw</p>
+<p>三个小题可以自行到百度网盘里面提取。之后用CISCO模拟器直接打开就可以了。</p>
+<h2 id="第一题：静态路由故障排除"><a href="#第一题：静态路由故障排除" class="headerlink" title="第一题：静态路由故障排除"></a>第一题：静态路由故障排除</h2><p>题目要求：</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545390430544.png" data-fancybox="group" data-caption="1545390430544" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545390430544.png" alt="1545390430544" title="1545390430544"></a></p>
+<pre><code>场景
+
+在本实验中，首先您将在每台路由器上加载配置脚本。这些脚本含有错误，会阻止网络中的端到端通信。您需要排除每台路由器的故障，找出配置错误并随后使用适当的命令纠正配置。当您纠正了所有的配置错误之后，网络中的所有主机就应该能够彼此通信了。
+任务 1：布线、清除配置并重新启动路由器
+
+步骤 1 构建一个类似拓扑图所示的网络。
+
+所有路由器上的 LAN 接口都是 Fa0/0
+从 Branch 到 HQ 的连接是 S0/0/0 到 S0/0/0
+从 HQ 到 ISP 的连接是 S0/0/1 到 S0/0/1
+
+步骤 2 使用 erase startup-config 命令清除每台路由器上的配置，然后使用 reload 命令重新启动路由器。如果询问您是否保存更改，回答 ‘no’。（使能口令为 class。）
+
+步骤 3 使用表中的地址配置主机。
+
+任务 2：使用提供的脚本加载路由器
+
+步骤 1 将以下脚本加载到 Branch 路由器。将脚本粘贴到路由器中之前，请确保您处于全局配置模式中。</code></pre><p>​<br>​    hostname Branch<br>​    !<br>​    !<br>​    no ip domain-lookup<br>​    !<br>​    interface FastEthernet0/0<br>​     ip address 172.20.1.129 255.255.255.128<br>​     duplex auto<br>​     speed auto<br>​     no shutdown<br>​    !<br>​    interface Serial0/0/0<br>​     ip address 172.20.1.1 255.255.255.128<br>​     clock rate 64000<br>​     no shutdown<br>​    !<br>​    ip route 0.0.0.0 0.0.0.0 172.20.0.129<br>​    !<br>​    !<br>​    !<br>​    !<br>​    line con 0<br>​    line vty 0 4<br>​    password cisco<br>​     login<br>​    !<br>​    end<br>​    步骤 2 将以下脚本加载到 HQ 路由器</p>
+<p>​<br>​<br>​    hostname HQ<br>​    !<br>​    !<br>​    no ip domain-lookup<br>​    !<br>​    interface FastEthernet0/0<br>​     ip address 172.20.0.129 255.255.255.128<br>​     duplex auto<br>​     speed auto<br>​     no shutdown<br>​    !<br>​    interface Serial0/0/0<br>​     ip address 172.20.1.2 255.255.255.128<br>​     no shutdown<br>​    !<br>​    interface Serial0/0/1<br>​     ip address 192.168.38.254 255.255.255.252<br>​      no shutdown<br>​    !<br>​    ip route 192.168.39.64 255.255.255.192 192.168.38.253<br>​    !<br>​    !<br>​    !<br>​    !<br>​    line con 0<br>​    line vty 0 4<br>​    password cisco<br>​     login<br>​    !<br>​    end<br>​    步骤 3 将以下脚本加载到 ISP 路由器</p>
+<p>​<br>​<br>​    hostname ISP<br>​    !<br>​    !<br>​    no ip domain-lookup<br>​    !<br>​    interface FastEthernet0/0<br>​     ip address 192.168.39.65 255.255.255.192<br>​     duplex auto<br>​     speed auto<br>​    !<br>​    interface Serial0/0/0<br>​     ip address 192.168.38.253 255.255.255.252<br>​     no shutdown<br>​    !<br>​    ip route 172.20.0.0 255.255.255.0 192.168.38.254<br>​    !<br>​    !<br>​    !<br>​    !<br>​    line con 0<br>​    line vty 0 4<br>​    password cisco<br>​     login<br>​    !<br>​    end<br>​    任务 3：Branch 路由器故障排除<br>​<br>    步骤 1    从连接到 Branch 路由器的主机开始排除故障。</p>
+<pre><code>在主机 PC1 上，是否能 ping 通 PC2？ _____________ 
+
+在主机 PC1 上，是否能 ping 通 ISP LAN 上的 Web 服务器？ _____________ 
+
+在主机 PC1 上，是否能 ping 通其默认网关？ _____________
+步骤 2    接下来检查 Branch 路由器是否存在配置错误。首先查看该路由器上每个接口的状态信息摘要。
+
+这些接口的状态是否有任何问题？ </code></pre><p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​<br>​    如果这些接口的状态有任何问题，请记下用来修正配置错误的命令。 </p>
+<p>​<br>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br>​    步骤 3    如果在上面记录了任何命令，请现在将这些命令应用于路由器配置。<br>​<br>    步骤 4    如果上一步对配置进行了更改，请再次查看路由器接口的状态信息摘要。</p>
+<pre><code>接口状态摘要信息是否显示有任何配置错误？ _____________ 
+如果回答是“有”，请再次对接口的状态进行故障排除。
+步骤 5    对 Branch 路由器上的静态路由配置进行故障排除。首先查看路由表。
+
+路由表中显示有哪些网络？ </code></pre><p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br>​<br>    路由表是否有任何问题？ </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br>​<br>    如果路由表有任何问题，请记下用来修正配置错误的命令。 </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br>​    步骤 6    如果在上面记录了任何命令，请现在将这些命令应用于路由器配置。<br>​<br>    步骤 7    如果上一步对配置进行了更改，请再次查看路由表。</p>
+<pre><code>路由表信息是否显示有任何配置错误？ _____________ 
+如果回答是“有”，请再次对路由表进行故障排除。
+步骤 8    再次 ping 各个主机。
+
+在主机 PC1 上，是否能 ping 通 PC2？ _____________ 
+
+在主机 PC1 上，是否能 ping 通 ISP LAN 上的 Web 服务器？ _____________ 
+
+在主机 PC1 上，是否能 ping 通 HQ 的 Serial 0/0/0 接口？ _____________
+任务 4：HQ 路由器故障排除
+
+步骤 1    从连接到 HQ 路由器的主机开始排除故障。
+
+在主机 PC2 上，是否能 ping 通 PC1？ _____________ 
+
+在主机 PC2 上，是否能 ping 通 ISP LAN 上的 Web 服务器？ _____________ 
+
+在主机 PC2 上，是否能 ping 通其默认网关？ _____________
+步骤 2    接下来检查 HQ 路由器是否存在配置错误。首先查看该路由器上每个接口的状态信息摘要。</code></pre><p>​<br>​    这些接口的状态是否有任何问题？ </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br>​<br>    如果这些接口的状态有任何问题，请记下用来修正配置错误的命令。 </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br>​    步骤 3    如果在上面记录了任何命令，请现在将这些命令应用于路由器配置。<br>​<br>    步骤 4    如果上一步对配置进行了更改，请再次查看路由器接口的状态信息摘要。</p>
+<pre><code>接口状态摘要信息是否显示有任何配置错误？ _____________ 
+如果回答是“有”，请再次对接口的状态进行故障排除。
+步骤 5    对 HQ 路由器上的静态路由配置进行故障排除。首先查看路由表。
+
+路由表中显示有哪些网络？ </code></pre><p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br>​<br>    路由表是否有任何问题？ </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br>​<br>    如果路由表有任何问题，请记下用来修正配置错误的命令。 </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br>​    步骤 6    如果在上面记录了任何命令，请现在将这些命令应用于路由器配置。<br>​<br>    步骤 7     如果上一步对配置进行了更改，请再次查看路由表。</p>
+<pre><code>路由表信息是否显示有任何配置错误？ _____________ 
+如果回答是“有”，请再次对路由表进行故障排除。
+步骤 8    再次 ping 各个主机。
+
+在主机 PC2 上，是否能 ping 通 PC1？ _____________ 
+
+在主机 PC2 上，是否能 ping 通 ISP 路由器的 Serial 0/0/1 接口？ _____________ 
+
+在主机 PC1 上，是否能 ping 通 ISP LAN 上的 Web 服务器？ _____________
+任务 5：ISP 路由器故障排除
+
+步骤 1    从连接到 ISP 路由器的主机开始排除故障。
+
+在模拟模式中，是否能从 ISP LAN 上的 Web 服务器 ping 通 PC1？ _____________ 
+
+在模拟模式中，是否能从 ISP LAN 上的 Web 服务器 ping 通 PC2？ _____________ 
+
+在模拟模式中，是否能从 ISP LAN 上的 Web 服务器 ping 通默认网关？ _____________
+步骤 2    接下来检查 ISP 路由器是否存在配置错误。首先查看该路由器上每个接口的状态信息摘要。
+
+这些接口的状态是否有任何问题？ </code></pre><p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br>​<br>    如果这些接口的状态有任何问题，请记下用来修正配置错误的命令。 </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br>​    步骤 3    如果在上面记录了任何命令，请现在将这些命令应用于路由器配置。<br>​<br>    步骤 4    如果上一步对配置进行了更改，请再次查看路由器接口的状态信息摘要。</p>
+<pre><code>接口状态摘要信息是否显示有任何配置错误？ _____________ 
+如果回答是“有”，请再次对接口的状态进行故障排除。
+步骤 5    对 ISP 路由器上的静态路由配置进行故障排除。首先查看路由表。
+
+路由表中显示有哪些网络？ </code></pre><p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br>​<br>    路由表是否有任何问题？ </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br>​<br>    如果路由表有任何问题，请记下用来修正配置错误的命令。 </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong><br>​    步骤 6    如果在上面记录了任何命令，请现在将这些命令应用于路由器配置。<br>​<br>    步骤 7    如果上一步对配置进行了更改，请再次查看路由表。</p>
+<pre><code>路由表信息是否显示有任何配置错误？ _____________ 
+如果回答是“有”，请再次对路由表进行故障排除。
+步骤 8    再次 ping 各个主机。
+
+在模拟模式中，是否能从 ISP LAN 上的 Web 服务器 ping 通 PC1？ _____________ 
+
+在模拟模式中，是否能从 ISP LAN 上的 Web 服务器 ping 通 PC2？ _____________ 
+
+在模拟模式中，是否能从 ISP LAN 上的 Web 服务器 ping 通 Branch 路由器的 WAN 接口？ _____________
+任务 6：思考题
+
+本次实验中提供的脚本存在多处配置错误。请在下列位置简要写出您找到的错误。 </code></pre><p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    <strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong><strong>____</strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong></strong> </p>
+<p>​<br>​    在本任务结束时，您的完成率应该是 100%。如果完成率不是 100%，单击 Check Results（检查结果）按钮进行检查，必要时进行故障排除。</p>
+<p>以上全部都是题目的要求，这里面其实我们只要关注这里面的完成度到100就行了。</p>
+<p>首先一步一步的来</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545390645701.png" data-fancybox="group" data-caption="1545390645701" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545390645701.png" alt="1545390645701" title="1545390645701"></a></p>
+<p>首先是连线</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545390748878.png" data-fancybox="group" data-caption="1545390748878" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545390748878.png" alt="1545390748878" title="1545390748878"></a></p>
+<p>如图我们连接好了线路，这个时候我们还没有配置IP地址，但是这时候完成度已经10%了。</p>
+<p>接着下一步，</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545390798741.png" data-fancybox="group" data-caption="1545390798741" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545390798741.png" alt="1545390798741" title="1545390798741"></a></p>
+<p>这里面我们把第二步还有第三步一块加起来进行说，IP地址怎么配置这个不用说了吧！</p>
+<p>第二步是说清楚配置然后用reload重启路由器。这里面我们要注意告诉我们路由器的密码是class</p>
+<p>我们先进去hq这个路由器配置这个其他的都一样，自行实践。</p>
+<pre><code>HQ&gt;enable 
+Password: 
+HQ#era
+HQ#erase s
+HQ#erase startup-config 
+Erasing the nvram filesystem will remove all configuration files! Continue? [confirm]y[OK]
+Erase of nvram: complete
+%SYS-7-NV_BLOCK_INIT: Initialized the geometry of nvram
+HQ#reload
+Proceed with reload? [confirm]n</code></pre><p>这里面是清除的过程。</p>
+<p>全部清除完毕之后我们进行IP地址的配置。</p>
+<p>记得要在配置完IP地址之后开启端口 NO SHUTDOWN</p>
+<p>然后我们配置完IP地址之后这时候进度已经飙升到78%了。</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545391294573.png" data-fancybox="group" data-caption="1545391294573" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545391294573.png" alt="1545391294573" title="1545391294573"></a></p>
+<p>继续进行，就是加载它的脚本了。</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545391321422.png" data-fancybox="group" data-caption="1545391321422" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545391321422.png" alt="1545391321422" title="1545391321422"></a></p>
+<pre><code>Branch(config-if)#exit
+Branch(config)#hostname Branch
+Branch(config)#!
+Branch(config)#!
+Branch(config)#no ip domain-lookup
+Branch(config)#!
+Branch(config)#interface FastEthernet0/0
+Branch(config-if)# ip address 172.20.1.129 255.255.255.128
+Branch(config-if)# duplex auto
+Branch(config-if)# speed auto
+Branch(config-if)# no shutdown
+Branch(config-if)#!
+Branch(config-if)#interface Serial0/0/0
+Branch(config-if)# ip address 172.20.1.1 255.255.255.128
+Branch(config-if)# clock rate 64000
+Branch(config-if)# no shutdown
+Branch(config-if)#!
+Branch(config-if)#ip route 0.0.0.0 0.0.0.0 172.20.0.129
+Branch(config)#!
+Branch(config)#!
+Branch(config)#!
+Branch(config)#!
+Branch(config)#line con 0
+Branch(config-line)#line vty 0 4
+Branch(config-line)#password cisco
+Branch(config-line)# login
+Branch(config-line)#!
+Branch(config-line)#end
+Branch#
+%SYS-5-CONFIG_I: Configured from console by console
+
+Branch#</code></pre><p>这个玩意复制粘贴就行了，记住是全局模式。</p>
+<p>HQ#这个是特权模式</p>
+<p>HQ#(config)这个是全局</p>
+<p>HQ#(config-if)这个是端口配置</p>
+<p>其他的两个都一样。</p>
+<p>这三个脚本都加载完了我们的进度就已经到了91%了哎，多开心！</p>
+<p>继续进行任务三了，就是排除故障，那么我们用ICMP的包看看排除吧！</p>
+<p>我们知道PING命令就是发出的ICMP包，我们PING试一试，看看题目的要求OK不OK</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545391570118.png" data-fancybox="group" data-caption="1545391570118" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545391570118.png" alt="1545391570118" title="1545391570118"></a></p>
+<p>他叫我们Ping pc2 啊 服务器啊这个我们动动脑子都能想明白肯定Ping不通因为有问题吗，但是为了以防万一还是要Ping一下，我们看超时。这里他叫我们Ping网关，这个现在而言猜测应该是Ping的通的，因为这个题是说路由的问题吗，应该问题不会出在我们内网这一段。</p>
+<p>我们ping网关</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545391697746.png" data-fancybox="group" data-caption="1545391697746" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545391697746.png" alt="1545391697746" title="1545391697746"></a></p>
+<p>我们看没问题啊，这就说明我们到路由器这一段根本没问题！</p>
+<p>然后继续向下进行啊，那么我们就要说是哪里出现的问题了。</p>
+<p>开启监控模式，我们在PC1发一个包到PC试一试！</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392093068.png" data-fancybox="group" data-caption="1545392093068" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392093068.png" alt="1545392093068" title="1545392093068"></a></p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392180703.png" data-fancybox="group" data-caption="1545392180703" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392180703.png" alt="1545392180703" title="1545392180703"></a></p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392266054.png" data-fancybox="group" data-caption="1545392266054" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392266054.png" alt="1545392266054" title="1545392266054"></a></p>
+<p>我们看啊，取得时候完全没问题，他已经到了PC2了，但是回来的时候挂在路由这里了哎，那我们猜测他找不到回来的路由。我们进入HQ查看路由表。</p>
+<p>果然没有到PC1的路由。那么我们就要给他添加一条路由了。</p>
+<p>HQ(config)#ip route 172.20.1.128 255.255.255.128 172.20.1.1</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392467629.png" data-fancybox="group" data-caption="1545392467629" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392467629.png" alt="1545392467629" title="1545392467629"></a></p>
+<p>我们发现OK问题排查完成！</p>
+<p>继续进行，看看发往web服务器的包问题出在哪里？</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392631437.png" data-fancybox="group" data-caption="1545392631437" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392631437.png" alt="1545392631437" title="1545392631437"></a></p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392647133.png" data-fancybox="group" data-caption="1545392647133" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392647133.png" alt="1545392647133" title="1545392647133"></a></p>
+<p>我们发现这个也是过得去回不来，我们查看路由表。</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392699415.png" data-fancybox="group" data-caption="1545392699415" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392699415.png" alt="1545392699415" title="1545392699415"></a></p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392804031.png" data-fancybox="group" data-caption="1545392804031" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392804031.png" alt="1545392804031" title="1545392804031"></a></p>
+<p>这个路由表指有到172.20.0.0网段的路由，这里我们猜测PC2跟他通讯应该是OK的。</p>
+<p>猜想正确，这里面我们简单粗暴一点，因为这个ISP路由器在外面就只有一个接口，我们直接叫他的所有包都给这个S0/0/1接口</p>
+<p>ISP(config)#ip route 0.0.0.0 0.0.0.0 s0/0/1</p>
+<p>ISP(config)#</p>
+<p>ISP(config)#no ip route 172.20.0.0 255.255.255.0 192.168.38.254</p>
+<p>ISP(config)#no ip route 192.168.2.0 255.255.255.0 Serial0/0/0</p>
+<p>删除并且设定路由，这里面我们试一试看看PC1通了吗。</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392950798.png" data-fancybox="group" data-caption="1545392950798" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/1545392950798.png" alt="1545392950798" title="1545392950798"></a></p>
+<p>OK问题解决了！</p>
+<p>这还是PC1,PC2,WEB服务器都能够PING通，但是这时候我们为什么进度还是94%！！！！我们查看检查说是我们Brunch还有ISP这两个路由器的静态路由配置有问题啊，这个我们是在有点····，经过我们考虑是路由设定的不严格导致的问题，我们设定严格的路由试一试！</p>
+<p>Branch(config)#ip route 0.0.0.0 0.0.0.0 172.20.1.2</p>
+<p>删除原先的路由，这里重新设置一下。我们发现变道97%了</p>
+<p>然后我们设置ISP的路由</p>
+<p>ISP(config)#ip route 172.20.0.0 255.255.254.0 192.168.38.254</p>
+<p>删除原先的路由然后我们发现100%进度。完成！</p>
+</div></article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:blueandwhite@yeah.net">青花@Blue_And_White</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://www.evil-qinghua.me/2018/12/21/cisco-e9-9d-99-e6-80-81-e8-b7-af-e7-94-b1-e6-95-85-e9-9a-9c-e6-8e-92-e9-99-a4-e5-ae-9e-e9-aa-8c/">https://www.evil-qinghua.me/2018/12/21/cisco-e9-9d-99-e6-80-81-e8-b7-af-e7-94-b1-e6-95-85-e9-9a-9c-e6-8e-92-e9-99-a4-e5-ae-9e-e9-aa-8c/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://www.evil-qinghua.me">青花@Blue_And_White</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/网络故障排除/">网络故障排除    </a><a class="post-meta__tags" href="/tags/计算机网络/">计算机网络    </a></div><div class="post_share"><div class="social-share" data-image="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/12/u19474976303221410136fm26gp0.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js"></script></div></div><div class="post-reward"><a class="reward-button button--primary button--animated"> <i class="fa fa-qrcode"></i> 打赏<div class="reward-main"><ul class="reward-all"><li class="reward-item"><img class="lazyload post-qr-code__img" src="/img/wechat.jpg" alt="微信"><div class="post-qr-code__desc">微信</div></li><li class="reward-item"><img class="lazyload post-qr-code__img" src="/img/alipay.jpg" alt="支付寶"><div class="post-qr-code__desc">支付寶</div></li></ul></div></a></div><nav class="pagination_post" id="pagination"><div class="prev-post pull_left"><a href="/2018/12/22/cisco动态静态路由问题排查(练习题2，3)/"><img class="prev_cover lazyload" data-src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/12/u19474976303221410136fm26gp0.jpg" onerror="onerror=null;src='https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/404.jpg'"><div class="label">上一篇</div><div class="prev_info"><span>cisco动态静态路由问题排查(练习题2，3)</span></div></a></div><div class="next-post pull_right"><a href="/2018/12/18/e5-85-b3-e4-ba-8edvwa-e9-9d-b6-e5-9c-ba-e7-9a-84-e5-91-bd-e4-bb-a4-e6-89-a7-e8-a1-8c-e6-bc-8f-e6-b4-9e-e5-b0-8f-e6-b5-8b/"><img class="next_cover lazyload" data-src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/12/QQ%E6%88%AA%E5%9B%BE20181218212605.jpg" onerror="onerror=null;src='https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/images/404.jpg'"><div class="label">下一篇</div><div class="next_info"><span>关于DVWA靶场的命令执行漏洞小测</span></div></a></div></nav><div class="relatedPosts"><div class="relatedPosts_headline"><i class="fa fa-fw fa-thumbs-up" aria-hidden="true"></i><span> 相关推荐</span></div><div class="relatedPosts_list"><div class="relatedPosts_item"><a href="/2018/12/22/cisco动态静态路由问题排查(练习题2，3)/" title="cisco动态静态路由问题排查(练习题2，3)"><img class="relatedPosts_cover lazyload" data-src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/12/u19474976303221410136fm26gp0.jpg"><div class="relatedPosts_main is-center"><div class="relatedPosts_date"><i class="fa fa-calendar fa-fw" aria-hidden="true"></i> 2021-04-01</div><div class="relatedPosts_title">cisco动态静态路由问题排查(练习题2，3)</div></div></a></div></div><div class="clear_both"></div></div><hr><div id="post-comment"><div class="comment_headling"><i class="fa fa-comments fa-fw" aria-hidden="true"></i><span> 评论</span></div><div class="vcomment" id="vcomment"></div><script src="https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js"></script><script>var notify = false == true ? true : false;
+var verify = false == true ? true : false;
+var GUEST_INFO = ['nick','mail','link'];
+var guest_info = 'nick,mail,link'.split(',').filter(function(item){
+  return GUEST_INFO.indexOf(item) > -1
+});
+guest_info = guest_info.length == 0 ? GUEST_INFO :guest_info;
+
+window.valine = new Valine({
+  el:'#vcomment',
+  notify:notify,
+  verify:verify,
+  appId:'B4MWK3jES1qGbtBKYREeYapv-MdYXbMMI',
+  appKey:'xxVauV1EEthTexdSDuumgDvx',
+  placeholder:'谈谈你的看法吧！',
+  avatar:'mm',
+  guest_info:guest_info,
+  pageSize:'10',
+  lang:'zh-cn',
+  recordIP: true
+});</script></div></div></main><footer id="footer" data-type="color"><div id="footer-wrap"><div class="copyright">&copy;2019 - 2021 By 青花@Blue_And_White</div><div class="framework-info"><span>驱动 </span><a href="http://hexo.io"><span>Hexo</span></a><span class="footer-separator">|</span><span>主题 </span><a href="https://github.com/jerryc127/hexo-theme-butterfly"><span>Butterfly</span></a></div></div></footer></div><section class="rightside" id="rightside"><div id="rightside-config-hide"><i class="fa fa-book" id="readmode" title="阅读模式"></i><i class="fa fa-plus" id="font_plus" title="放大字体"></i><i class="fa fa-minus" id="font_minus" title="缩小字体"></i><a class="translate_chn_to_cht" id="translateLink" href="javascript:translatePage();" title="简繁转换" target="_self">繁</a><i class="darkmode fa fa-moon-o" id="darkmode" title="夜间模式"></i></div><div id="rightside-config-show"><div id="rightside_config" title="设置"><i class="fa fa-cog" aria-hidden="true"></i></div><a id="to_comment" href="#post-comment" title="直达评论"><i class="scroll_to_comment fa fa-comments">  </i></a><i class="fa fa-list-ul close" id="mobile-toc-button" title="目录" aria-hidden="true"></i><i class="fa fa-arrow-up" id="go-up" title="回到顶部" aria-hidden="true"></i></div></section><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script><script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script><script src="https://cdn.jsdelivr.net/gh/jerryc127/butterfly_cdn@2.1.0/js/fireworks.js"></script><script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><script src="https://cdn.jsdelivr.net/npm/instant.page@latest/instantpage.min.js" type="module"></script><script src="https://cdn.jsdelivr.net/npm/lazysizes@latest/lazysizes.min.js" async></script><div class="search-dialog" id="local-search"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章"></div></div></div><hr><div id="local-search-results"><div id="local-hits"></div><div id="local-stats"><div class="local-search-stats__hr" id="hr"><span>由</span> <a href="https://github.com/wzpan/hexo-generator-search" style="color:#49B1F5;">hexo-generator-search</a>
+ <span>提供支持</span></div></div></div><span class="search-close-button"><i class="fa fa-times"></i></span></div><div class="search-mask"></div></body></html>
