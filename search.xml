@@ -1,6 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>溯源反制那些事</title>
+    <url>/2023/08/21/2023-01-21-%E6%BA%AF%E6%BA%90%E5%8F%8D%E5%88%B6%E9%82%A3%E4%BA%9B%E4%BA%8B/</url>
+    <content><![CDATA[<h1 id="聊聊反制那些事"><a href="#聊聊反制那些事" class="headerlink" title="聊聊反制那些事"></a>聊聊反制那些事</h1><h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>​        上回书说到，只拿到了IP应该怎么做，怎么去搜集尽可能多的信息，也说到了其中的一些痛点，比较难顶的地方就是我们需要扩大信息搜集面，以获得更多地攻击者信息，当然最后我也提到了目前来说的演练中，我们其实反制还是要慎重，因为红队老哥打过来，不可能傻到不挂代理，不用跳板，所以大概率我们寻者IP回去，这个IP大概率是肉鸡，说到这里我们可能就比较恼火了，喵的，大概率是肉鸡，还不能去把这个肉鸡打下来，然后去找红队的足迹，那咋办？其实总的来说，在目前的一些攻防演练中，如果能够确定这个主机是红队的，还是能够在不对肉鸡进行过度反制的情况下获得一些蛛丝马迹的，那么这里就一些红队或者肉鸡的根本特征来聊聊，如何在确定一个恶意IP之后，对攻击进行进一步的反制，获得更多的红队信息，有利于我们交叉论证。</p>
+<h1 id="1-肉鸡OR红队的特征？"><a href="#1-肉鸡OR红队的特征？" class="headerlink" title="1.肉鸡OR红队的特征？"></a>1.肉鸡OR红队的特征？</h1><p>​        那就说说，我们怎么来确定说，这个人就是红队呢？从前参加某市级别攻防演练打红队（可能本人也比较菜），当时比较低级别的手段都是找个云服务厂商弄个主机当跳板就完事了，然后代理啥的自己挂自己弄（当然，在攻防演练结束后大家肯定都会换IP），大多数情况下，队友可能就只用这一个跳板机进行攻击，这时候我们拿到某IP，直接FOFA,NMAP一把梭哈，发现居然没啥正常业务（所谓正常业务，我们从自身角度出发，换位思考，那就是我买一台云服务器，搭个博客，或者弄个网站，换言之如果我是一个黑客，那我不可能拿他来做啥业务啊，我做的越多暴露面就越大，我红队我攻击机上用WP弄了个博客，然后上面我叫啥联系方式，社交，github兴趣爱好都有，好吧，你来抓我把（PS：想想也不能是吧，不过别笑，还真遇到过这种事，遇上全凭运气好，轻轻松松拔个底掉。））。</p>
+<p>​    回到正题，对于一些隐藏的比较好的，就弄跳板机，只开个22端口，别的东西你就找吧，你找不到，这种我们确实没有什么好的办法，但是对于大多数攻击机，红队为了方便攻击，协作还是会开放一些服务的，通过识别这些服务，方便了红队的同时，也能够方便我们进行一定的利用。</p>
+<h2 id="1-1怎么判断是不是一个肉鸡？"><a href="#1-1怎么判断是不是一个肉鸡？" class="headerlink" title="1.1怎么判断是不是一个肉鸡？"></a>1.1怎么判断是不是一个肉鸡？</h2><p>​    首先来说说手法，如何来说判断这个IP是不一是一个肉鸡呢？其实这个我们能够说得东西不多，简单思考一下，哪些主机最容易被当成目标？那肯定是暴露在外网，并且十分脆弱的主机，一般都是中小型企业的一些网站，他们往往没有专业的运维人员，很多组件也不会及时更新，用别人的框架CMS直接部署，一个模板改改就用，什么弱密码，默认口令，改都不带改，我家大门常打开，是个人都能进。如果我们发现这种，而且网站还不是与IT领域有关系的公司，那么他大概率是一个肉鸡。至于攻击行为，可能是红队的也可能不是，其实我们在确定其为肉鸡后，一些你懂得原因，也不能再去搞他一次，很大可能就到此为止了，但是呢，一些红队老哥可能会在这些肉鸡上，开一些东西，这个其实很有利于我们定性是否为红队，或者进行溯源取证，这个我们会放在下一节说。</p>
+<h2 id="1-2红队老哥是不是你啊？"><a href="#1-2红队老哥是不是你啊？" class="headerlink" title="1.2红队老哥是不是你啊？"></a>1.2红队老哥是不是你啊？</h2><p>​    在实践中发现，（PS：不说CS服务器这种，这种是我们一般被上线了被打穿了才会出现的角度，本文还是说我们只有IP去溯源的思路），红队老哥其实喜欢用两种服务的，分别是NPS,ARL,此节我们来聊聊其特征，下节我们在谈反制利用。</p>
+<h3 id="灯塔ARL"><a href="#灯塔ARL" class="headerlink" title="灯塔ARL"></a>灯塔ARL</h3><p>​    首先说说灯塔ARL，ARL（Asset Reconnaissance Lighthouse）资产侦查灯塔，是一个良好的资产收集系统，旨在为渗透测试人员以及安全团队基于企业的网络安全能快速查找到指定企业资产中的脆弱点，降低企业被利用及威胁可能性的风险，发现一些红队老哥也很喜欢用，常常开放于5003端口。</p>
+<p>​    比如我们拿到了一个攻击者IP，然后发现其并没有开放啥端口服务，只有一个5033，然后进行访问，一看是灯塔，那么这个大概率是个红队老哥了。</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822132406591.png" data-fancybox="group" data-caption="image-20230822132406591" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822132406591.png" alt="image-20230822132406591" title="image-20230822132406591"></a></p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822134752819.png" data-fancybox="group" data-caption="image-20230822134752819" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822134752819.png" alt="image-20230822134752819" title="image-20230822134752819"></a></p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822135023528.png" data-fancybox="group" data-caption="image-20230822135023528" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822135023528.png" alt="image-20230822135023528" title="image-20230822135023528"></a></p>
+<p>也可以通过这个图标来识别，fofa指纹为 app=”资产灯塔系统”。</p>
+<h3 id="NPS"><a href="#NPS" class="headerlink" title="NPS"></a>NPS</h3><p>​    NPS作为一款代理工具深受红队老哥的喜爱，很喜欢用来穿内网。</p>
+<p>​    NPS 是一款轻量级、高性能、功能强大的内网穿透代理服务器。目前支持 tcp、udp 流量转发，可支持任何 tcp、udp 上层协议（访问内网网站、本地支付接口调试、ssh 访问、远程桌面，内网 dns 解析等等……），此外还支持内网 http 代理、内网 socks5 代理、p2p 等，并带有功能强大的 web 管理端。</p>
+<p>​    一般一个正常的业务网站，其实是不太可能部署一个NPS的，如果部署了，很有可能被红队老哥利用了。这东西开放的端口可就多了，啥都有，我们也就不细说了，如果扫出来端口挨个去访问一下，然后发现这样的页面就是NPS。</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822150223653.png" data-fancybox="group" data-caption="image-20230822150223653" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822150223653.png" alt="image-20230822150223653" title="image-20230822150223653"></a></p>
+<h1 id="2-反制与利用"><a href="#2-反制与利用" class="headerlink" title="2.反制与利用"></a>2.反制与利用</h1><h2 id="2-1NPS反制"><a href="#2-1NPS反制" class="headerlink" title="2.1NPS反制"></a>2.1NPS反制</h2><p>​    上面介绍ARL在NPS之前，那么这里我们为啥先说NPS呢？这个其实NPS是有漏洞的，灯塔ARL暂时没听说有啥漏洞可以利用，我这里想先说明怎么利用NPS然后进一步分析，在谈一谈灯塔我们可以利用的点，其实思路都是大抵相同的。</p>
+<p>   在拿到了NPS之后，NPS如果没有开启秘钥认证参数，我们是可以利用漏洞进入后台的。</p>
+<p>​    其实这是一个由配置错误产生的漏洞。</p>
+<p>​    /conf/nps.conf</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822140550962.png" data-fancybox="group" data-caption="image-20230822140550962" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822140550962.png" alt="image-20230822140550962" title="image-20230822140550962"></a></p>
+<p>/web/controllers/base.go</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822143026733.png" data-fancybox="group" data-caption="image-20230822143026733" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822143026733.png" alt="image-20230822143026733" title="image-20230822143026733"></a></p>
+<p>通过查看逻辑我们可以看出，默认情况下auth_key是被注释掉的，我们看一下逻辑啊，md5key是我们提供的，然后时间戳我们就不用说了，configkey是从配置文件里面取的，这里判断的条件是md5key不为空，我们能够指定，肯定不为空，然后时间戳在20S以内，这也限制了我们这次访问只有20秒有效期，第三个configkey和时间戳拼接起来的md5值要等于md5key，我们知道auth_key是被注释的，所以说这里其实就是对比的时间戳的md5值与md5key一致就ok了，就能够通过这个认证了。</p>
+<p>也就是说，我们只需要在请求参数提供auth_key为时间戳的md5，并且提供timestamp为时间戳就OK拉。</p>
+<div class="code-area-wrap"><div class="highlight-tools"><i class="fa fa-angle-down code-expand" aria-hidden="true"></i><div class="code_lang">python</div><div class="copy-notice"></div><i class="fa fa-clipboard" aria-hidden="true"></i></div><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line">tm = time.time()</span><br><span class="line">md5hash = hashlib.md5(str(int(tm)).encode(<span class="string">"utf-8"</span>))</span><br><span class="line">auth_key= md5hash.hexdigest()</span><br><span class="line">print(<span class="string">"Index/Index?auth_key=%s&amp;timestamp=%s"</span> % (auth_key,int(tm)))</span><br></pre></td></tr></table></figure></div>
+
+<p>其实这个漏洞修复也很简单，只需要把auth_key的注释取消掉就行了，但是也要注意用一个强一点的密码。</p>
+<p>当然我们也可用admin/123  nps的弱密码看看能不能进去，知道原理我们就可以构造exp进行利用，由于上面的py脚本生成的链接只有20s有效我们得一直生成提交，很费劲，这里推荐一个burp suite插件很好用。</p>
+<p><a href="https://github.com/weishen250/npscrack" target="_blank" rel="noopener">https://github.com/weishen250/npscrack</a></p>
+<p>结合burp很好利用，这下我们就可以进入到有漏洞的Nps后台，查看信息进一步利用了。</p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822145607733.png" data-fancybox="group" data-caption="image-20230822145607733" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822145607733.png" alt="image-20230822145607733" title="image-20230822145607733"></a></p>
+<p><a href="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822145750391.png" data-fancybox="group" data-caption="image-20230822145750391" class="fancybox"><img src="https://blueandwhite.oss-cn-beijing.aliyuncs.com/blog/202308/image-20230822145750391.png" alt="image-20230822145750391" title="image-20230822145750391"></a></p>
+<p>进入后台，我们可以看到他都弄了那些主机还有一些秘钥信息，很多时候一个攻击者往往会利用自己的id或者名字来定义秘钥，这个很方便我们获得更多攻击者的信息。</p>
+<h2 id="2-2-灯塔ARL"><a href="#2-2-灯塔ARL" class="headerlink" title="2.2 灯塔ARL"></a>2.2 灯塔ARL</h2><p>​    灯塔ARL没听说爆出过啥漏洞利用啥的，最多的只能是我们试试弱口令了，一般安装完灯塔之后，默认为admin/arlpass很多人会疏忽忘了改，另外也可以试试灯塔重置之后的口令admin/admin123 如果还是不行的话感觉只能爆破看看有没有弱密码了。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>​    这两次次说了说攻防演练在溯源反制过程中常常会遇到的一些东西，以及常见的反制手段，希望给大家提供一个思路，来更好的去追查攻击者。</p>
+]]></content>
+      <categories>
+        <category>攻防演练</category>
+        <category>蓝队</category>
+      </categories>
+      <tags>
+        <tag>溯源反制</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>聊聊溯源反制那些事</title>
     <url>/2023/08/20/%E8%81%8A%E8%81%8A%E6%BA%AF%E6%BA%90%E9%82%A3%E4%BA%9B%E4%BA%8B/</url>
     <content><![CDATA[<h1 id="聊聊蓝队溯源那些事"><a href="#聊聊蓝队溯源那些事" class="headerlink" title="聊聊蓝队溯源那些事"></a>聊聊蓝队溯源那些事</h1><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>​    红蓝对抗中，由于业务需求，蓝队常常需要对红队进行溯源反制，而作为蓝队人员，特别是驻场人员，大多数都是盯着设备看，如果未被红队攻入，能够获取的信息十分有限，作为曾经有幸参加过某市hvv的红队选手以及做过一阵子应急工作的小菜鸡来说，最近参加攻防演练中负责研判+溯源+反制工作，在对红队进行溯源时，遇到了很多烦心事，发现很多地方特别麻烦，特此来聊聊这次工作中，我的一些思考。当然鉴于篇幅有限，本文我们只讨论在红队信息搜集，打点过程中我们能够做的事，对于打穿之后的日志分析，应急响应，溯源挽回等，我会在后续继续聊。</p>
